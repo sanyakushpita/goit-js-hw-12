@@ -65,6 +65,9 @@ loadMoreBtn.addEventListener('click', async () => {
   showLoader();
 
   try {
+    // Запам’ятовуємо кількість елементів до додавання нових
+    const previousItems = document.querySelectorAll('.gallery-item').length;
+
     const data = await getImagesByQuery(currentQuery, currentPage);
     createGallery(data.hits);
 
@@ -77,7 +80,7 @@ loadMoreBtn.addEventListener('click', async () => {
       });
     }
 
-    scrollToNewImages();
+    scrollToNewImages(previousItems); // прокручуємо до першого нового
   } catch (error) {
     iziToast.error({
       message: 'Error loading more images.',
@@ -88,21 +91,23 @@ loadMoreBtn.addEventListener('click', async () => {
   }
 });
 
-function scrollToNewImages() {
-  const lastImage = galleryList.lastElementChild;
+function scrollToNewImages(previousItemCount) {
+  const newItems = document.querySelectorAll('.gallery-item');
+  const firstNewItem = newItems[previousItemCount];
 
-  if (lastImage) {
-    const img = lastImage.querySelector('img');
+  if (firstNewItem) {
+    const img = firstNewItem.querySelector('img');
+
     if (img.complete) {
-      lastImage.scrollIntoView({
+      firstNewItem.scrollIntoView({
         behavior: 'smooth',
-        block: 'end',
+        block: 'start',
       });
     } else {
       img.onload = () => {
-        lastImage.scrollIntoView({
+        firstNewItem.scrollIntoView({
           behavior: 'smooth',
-          block: 'end',
+          block: 'start',
         });
       };
     }
