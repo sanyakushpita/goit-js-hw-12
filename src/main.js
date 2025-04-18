@@ -89,13 +89,22 @@ loadMoreBtn.addEventListener('click', async () => {
 });
 
 function scrollToNewImages() {
-  setTimeout(() => {
-    const lastImage = galleryList.lastElementChild;
-    if (lastImage) {
+  const lastImage = galleryList.lastElementChild;
+
+  if (lastImage) {
+    const img = lastImage.querySelector('img');
+    if (img.complete) {
       lastImage.scrollIntoView({
         behavior: 'smooth',
         block: 'end',
       });
+    } else {
+      img.onload = () => {
+        lastImage.scrollIntoView({
+          behavior: 'smooth',
+          block: 'end',
+        });
+      };
     }
-  }, 100);
+  }
 }
