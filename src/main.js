@@ -89,11 +89,13 @@ loadMoreBtn.addEventListener('click', async () => {
 });
 
 function scrollToNewImages() {
-  const lastImage = galleryList.lastElementChild;
-  if (lastImage) {
-    lastImage.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end',
-    });
-  }
+  setTimeout(() => {
+    const lastImage = galleryList.lastElementChild;
+    if (lastImage) {
+      lastImage.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+      });
+    }
+  }, 100);
 }
