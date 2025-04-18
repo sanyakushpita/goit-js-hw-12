@@ -107,6 +107,33 @@ button:hover {
   font-weight: bold;
 }
 
+.load-more-btn {
+  display: block;
+  margin: 20px auto;
+  padding: 8px 16px;
+  width: 125px;
+  height: 40px;
+  background-color: #4e75ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.load-more-btn:hover {
+  background: #6c8cff;
+}
+
+.load-more-btn.is-hidden {
+  display: none;
+}
+
+.is-hidden {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .gallery {
     grid-template-columns: repeat(2, 1fr);
