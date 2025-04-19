@@ -13,10 +13,10 @@ import 'izitoast/dist/css/iziToast.min.css';
 const form = document.querySelector('.form');
 const searchInput = document.querySelector('input[name="search-text"]');
 const loadMoreBtn = document.querySelector('.load-more-btn');
-const galleryList = document.querySelector('.gallery');
 
 let currentPage = 1;
 let currentQuery = '';
+const perPage = 15;
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
@@ -48,7 +48,17 @@ form.addEventListener('submit', async event => {
       });
     } else {
       createGallery(data.hits);
-      showLoadMoreButton();
+
+      const totalPages = Math.ceil(data.totalHits / perPage);
+      if (currentPage < totalPages) {
+        showLoadMoreButton();
+      } else {
+        hideLoadMoreButton();
+        iziToast.info({
+          message: "You've reached the end of search results.",
+          position: 'topRight',
+        });
+      }
     }
   } catch (error) {
     iziToast.error({
@@ -65,14 +75,15 @@ loadMoreBtn.addEventListener('click', async () => {
   showLoader();
 
   try {
-    // Запам’ятовуємо кількість елементів до додавання нових
     const previousItems = document.querySelectorAll('.gallery-item').length;
-
     const data = await getImagesByQuery(currentQuery, currentPage);
+
     createGallery(data.hits);
 
     const totalLoaded = document.querySelectorAll('.gallery-item').length;
-    if (totalLoaded >= data.totalHits) {
+    const totalAvailable = data.totalHits;
+
+    if (totalLoaded >= totalAvailable) {
       hideLoadMoreButton();
       iziToast.info({
         message: "You've reached the end of search results.",
@@ -80,7 +91,7 @@ loadMoreBtn.addEventListener('click', async () => {
       });
     }
 
-    scrollToNewImages(previousItems); // прокручуємо до першого нового
+    scrollToNewImages(previousItems);
   } catch (error) {
     iziToast.error({
       message: 'Error loading more images.',
